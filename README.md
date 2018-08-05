@@ -1,2 +1,2 @@
-# practice
-A repo for storing my practice works and exams. 
+# Coding Practice
+A repo for storing my solutions in coding challenges and programing practice.
