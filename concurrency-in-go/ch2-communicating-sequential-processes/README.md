@@ -39,3 +39,16 @@
 ## Go’s Philosophy on Concurrency
 
 ![Decision_tree_of_concurrency_primitives_and_channels](https://docs.google.com/drawings/d/e/2PACX-1vQvlFK3ViKVFBjrSD6BIT4A1cGxwdDJh_aO0sUeiDFgr0O-8EyEaVAdl3xqDVjoyEwRhfzxIHR4Q3KR/pub?w=825&h=557)
+
+* Is it a performance-critical section?
+    * Channels use memory access synchronization to operate, therefore they can only be slower.
+    * A performance-critical section might be hinting that we need to restructure our program.
+* Are you trying to transfer ownership of data?
+    * Data has an owner, and one way to make concurrent programs safe is to ensure only one concurrent context has ownership of data at a time.
+    * Also, we can create buffered channels to implement a cheap in-memory queue.
+* Are you trying to guard internal state of a struct?
+    * By using memory access synchronization primitives, you can hide the implementation detail of locking your critical section from your callers.
+* Are you trying to coordinate multiple pieces of logic?
+    * Channels are inherently more composable than memory access synchronization primitives. 
+* Conclusion
+    * Aim for simplicity, use channels when possible, and treat goroutines like a free resource.
