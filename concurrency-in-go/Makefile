@@ -1,5 +1,4 @@
 NUM = 101
-OUTPUT_FILE = out
 CODE_PATH := $(shell find . -name "$(NUM)-*.go" )
 
 all:
@@ -8,9 +7,23 @@ all:
 run:
 ifdef CODE_PATH
 	@ echo "Find the code file in $(CODE_PATH)" ;
-	@ go build -o $(OUTPUT_FILE) $(CODE_PATH) ;
-	@ echo "Execution Result:\n---------\n" ;  ./$(OUTPUT_FILE) ; echo "\n---------\n" ; 
-	@ rm $(OUTPUT_FILE) ;
+	@ go run $(CODE_PATH) ;
+else
+	@ echo "Can not find the code num: $(NUM)" ;
+endif
+
+test:
+ifdef CODE_PATH
+	@ echo "Find the code file in $(CODE_PATH)" ;
+	@ go test -v $(CODE_PATH) ;
+else
+	@ echo "Can not find the code num: $(NUM)" ;
+endif
+
+bench:
+ifdef CODE_PATH
+	@ echo "Find the code file in $(CODE_PATH)" ;
+	@ go test -v -bench=. $(CODE_PATH) ;
 else
 	@ echo "Can not find the code num: $(NUM)" ;
 endif
