@@ -48,3 +48,22 @@
 * The call to __Wait__ doesn’t just block, it suspends the current goroutine, allowing other goroutines to run on the OS thread. 
     * When you call __Wait__: upon entering Wait, Unlock is called on the Cond variable’s Locker, and upon exiting Wait, Lock is called on the Cond variable’s Locker. 
 * Internally, the runtime maintains a FIFO list of goroutines waiting to be signaled; __Signal__ finds the goroutine that’s been waiting the longest and notifies that, whereas __Broadcast__ sends a signal to all goroutines that are waiting.
+
+## Once
+
+* sync.Once is a type that utilizes some sync primitives internally to ensure that only one call to Do ever calls the function passed in—even on different goroutines.
+
+## Pool
+
+* Pool is a concurrent-safe implementation of the object pool pattern.
+* Pool’s primary interface is its Get method. 
+    * When called, Get will first check whether there are any available instances within the pool to return to the caller
+    * If not, call its New member variable to create a new one. 
+    When finished, callers call Put to place the instance they were working with back in the pool for use by other processes.
+* Another common situation where a Pool is useful is for warming a cache of pre-allocated objects for operations that must run as quickly as possible. 
+    * This is very common when writing high-throughput network servers that attempt to respond to requests as quickly as possible.
+* Thumb rules
+    * When instantiating sync.Pool, give it a New member variable that is thread-safe when called.
+    * When you receive an instance from Get, make no assumptions regarding the state of the object you receive back.
+    * Make sure to call Put when you’re finished with the object you pulled out of the pool. Otherwise, the Pool is useless. Usually this is done with defer.
+    * Objects in the pool must be roughly uniform in makeup.
