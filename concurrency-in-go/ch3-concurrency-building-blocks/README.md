@@ -98,3 +98,13 @@
 * The first thing we should do to put channels in the right context is to assign channel _ownership_.
     * Define ownership as being a goroutine that instantiates, writes, and closes a channel.
 
+## The select Statement
+
+* __select__ is the glue that binds channels together.
+    * It's how we’re able to compose channels together in a program to form larger abstractions.
+    * It helps safely bring channels together with concepts like cancellations, timeouts, waiting, and default values.
+*  select block encompasses a series of case statements that guard a series of statements
+    * case statements in a select block aren’t tested sequentially.
+    * each case statement has an equal chance of being selected as all the others.
+* the select statement also allows for a __default__ clause in case you’d like to do something if all the channels you’re selecting against are blocking. 
+
