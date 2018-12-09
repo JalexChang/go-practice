@@ -67,3 +67,34 @@
     * When you receive an instance from Get, make no assumptions regarding the state of the object you receive back.
     * Make sure to call Put when you’re finished with the object you pulled out of the pool. Otherwise, the Pool is useless. Usually this is done with defer.
     * Objects in the pool must be roughly uniform in makeup.
+
+## Channels
+
+* Channels are one of the synchronization primitives in Go derived from Hoare’s CSP. 
+    * They are best used to communicate information between goroutines.
+* Buffered channels can be useful in certain situations, but you should create them with care.
+    * Buffered channels can easily become a premature optimization and also hide deadlocks by making them more unlikely to happen.
+    * Take a good look at the example [314](./channels/314-using-buffered-chans.go).
+* Result of channel operations given a channel’s state
+
+    | Operation | Channel state | Result | 
+    |---|---|---|
+    | Read | nil | Block | 
+    | | Open and Not Empty | Value |
+    | | Open and Empty | Block |
+    | | Closed | \<default value>, false |
+    | | Write Only | Compilation Error |
+    | Write | nil | Block | 
+    | | Open and Full | Block |
+    | | Open and Not Full | Write Value |
+    | | Closed | __panic__ |
+    | | Receive Only | Compilation Error |
+    | Close | nil | __panic__ | 
+    | | Open and Not Empty | Closes Channel; reads succeed until channel is drained, then reads produce default value |
+    | | Open and Empty | Closes Channel; reads produces default value |
+    | | Closed | __panic__ |
+    | | Receive Only | Compilation Error |
+
+* The first thing we should do to put channels in the right context is to assign channel _ownership_.
+    * Define ownership as being a goroutine that instantiates, writes, and closes a channel.
+
