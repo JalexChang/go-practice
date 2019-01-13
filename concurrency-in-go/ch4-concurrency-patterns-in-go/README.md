@@ -103,7 +103,7 @@ for {
     * When you need to deal in specific types, you can place a stage that performs the __type assertion__ for you.
     * The type-specific stages are fast, but only marginally faster in magnitude.
 
-### Fan-Out, Fan-In
+## Fan-Out, Fan-In
 
 * Sometimes, stages in your pipeline can be particularly computationally expensive.
     * Upstream stages in your pipeline can become blocked while waiting for your expensive stages to complete.
@@ -112,23 +112,23 @@ for {
     * __Fan-in__ is a term to describe the process of combining multiple results into one channel.
 * A naive implementation of the fan-in, fan-out algorithm only works if the order in which results arrive is unimportant.
 
-### The or-done-channel
+## The or-done-channel
 
 * A way to make your _select_ with done_ much clear for readability.
 
-### The tee-channel
+## The tee-channel
 
 * A way to send values coming in from a channel off into two separate areas of your codebase via different channels.
 * The iteration over _in_ cannot continue until both _out1_ and _out2_ have been written to.
 
-### The bridge-channel
+## The bridge-channel
 
 * A way to consume values from a sequence of channels.
     * Ordered read from each channel.
 
-### Queuing
+## Queuing
 
-* Queuing will almost never speed up the total runtime of your program; it will only allow the program to behave differently.
+* Queuing will almost _never speed up the total runtime_ of your program; it will only allow the program to behave differently.
     * Queuing is a way to reduce the time in _blocking state_.
     * The true utility of queues is to _decouple_ stages so that the runtime of one stage has no impact on the runtime of another.
 * Only two situations that queuing can the overall performance of your system:
@@ -139,14 +139,19 @@ for {
 * Adding queuing prematurely can hide synchronization issues such as deadlocks and livelocks.
     * You may be tempted to add queuing elsewhere—e.g., after a computationally expensive stage—but avoid that temptation!
     * See _Little’s Law_.
-* Queuing can be useful in your system, but because of its complexity, it’s usually one of the last optimizations I would suggest implementing.
+* Queuing can be useful in your system, but because of its complexity, it’s usually one of the _last optimizations_.
 
-### Context Package
+## Context Package
 
 * __Context__ pkg is a useful way to communicate extra information alongside the simple notification to cancel.
     * Why the cancellation was occuring.
-    * Whether or not our function has a deadline by which it needs to complete.
-* It provides serveral methods to help developers to control a goroutine's life cycle.
+    * Whether or not our function has a deadline by which it needs to complete.* Instances of __context.Context__ may look equivalent from the outside, but internally they may change at every stack-frame.
+* Always pass instances of Context into your functions.
+* Using the __done channel__ pattern, we could accomplish this by wrapping the incoming __done__ channel in other __done__ channels and then returning if any of them fire. But we wouldn’t have the extra information about __deadlines__ and __errors__ a __Context__ gives us.
+
+### Package Methods
+
+* __Context__ package provides serveral methods to help developers to control a goroutine's life cycle.
     * __Done__ method which returns a channel that’s closed when our function is to be preempted.
     * __Deadline__ function to indicate if a goroutine will be canceled after a certain time.
     * __Err__ method that will return non-nil if the goroutine was canceled.
@@ -158,16 +163,15 @@ for {
     * __WithValue__ returns a new Coontext that having a specific key-value in the data bag.
         * The __key__ you use must satisfy Go’s notion of _comparability_; that is, the equality operators _==_ and _!=_ need to return correct results when used.
         * __Values__ returned must be safe to access from multiple goroutines.
-* Instances of __context.Context__ may look equivalent from the outside, but internally they may change at every stack-frame.
-    * It is important to always pass instances of Context into your functions.
-    * This way functions have the Context intended for it, and not the Context intended for a stack-frame N levels up the stack.
-* Using the __done channel__ pattern, we could accomplish this by wrapping the incoming __done__ channel in other __done__ channels and then returning if any of them fire.
-    * But we wouldn’t have the extra information about __deadlines__ and __errors__ a __Context__ gives us.
+
+
+### Ruel of Thumb
+
 * The Go authors recommend you follow a few rules when storing and retrieving value from a Context since the key-value is not type-safe.
     * Define a custom key-type in your package.
     * Use context values only for request-scoped data that transits processes and API boundaries, not for passing optional parameters to functions.
         * The data should transit process or API boundaries.
-        * The data should be immutable.
-        * The data should trend toward simple types.
-        * The data should be data, not types with methods.
-        * The data should help decorate operations, not drive them.
+        * The data should be _immutable_.
+        * The data should trend toward _simple types_.
+        * The data should be data, _not types with methods_.
+        * The data should _help decorate operations_, not drive them.
