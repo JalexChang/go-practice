@@ -114,7 +114,7 @@ for {
 
 ## The or-done-channel
 
-* A way to make your _select_ with done_ much clear for readability.
+* A way to make your _select_ with _done_ much clear for readability.
 
 ## The tee-channel
 
