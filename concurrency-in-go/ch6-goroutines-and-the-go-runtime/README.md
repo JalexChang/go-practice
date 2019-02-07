@@ -32,12 +32,14 @@
     4. If the thread’s deque is empty, either:
         1. Stall at a join.
         2. Steal work from the head of a random thread’s associated deque.
-* Comparision:  
-    || Continuation Stealing | Task Stealing (child) |
-    |---|---|---|
-    | Queue Size | Bounded | Unbounded |
-    | Order of Execution | Serial | Out of Order |
-    | Join Point | Nonstalling | Stalling |
+* Comparision:
+
+|| Continuation Stealing | Task Stealing (child) |
+|---|---|---|
+| Queue Size | Bounded | Unbounded |
+| Order of Execution | Serial | Out of Order |
+| Join Point | Nonstalling | Stalling |
+
 * The drawback of continuation-stealing: requires support from the compiler.
 * The work sitting on the tail of its deque has some interesting properties:
     * It’s the work most likely needed to complete the parent’s join (perform better).
