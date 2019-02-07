@@ -6,20 +6,30 @@ It sould be noticed that most of materials in this folder are extracted from the
 
 ## How to run sample code
 
-Each sample code in this folder is a complete runnable source code that you can compile it and execute it independently and directlty.
+Each sample code is a complete runnable source code that you can compile it and execute it independently and directlty.
 
 Or, you can use the customized [Makefile](Makefile) to help you run the file easily by a command 
-``` make run NUM=<code_file_number> ```, which will automately find the corresponding source file, compile it, execute its binary, show a result, and then remove the binary.
+``` make run/test/bench NUM=<code_file_number> ```, which will automately find the corresponding source file and execute it via ```go run/test```
 
 For example:
 
 ```
 $ make run NUM=101
-Find the code file in /Users/jalexchang/Documents/coding-practice/concurrency-in-go/ch1-an-introduction-to-concurrency/101-race-condition.go
-Execution Result:
----------
-
+Find the code file in ./ch1-an-introduction-to-concurrency/101-race-condition.go
 the value is 0.
 
----------
+$ make bench NUM=305
+Find the code file in ./ch3-concurrency-building-blocks/goroutines/305-ctx-switch_test.go
+goos: darwin
+goarch: amd64
+BenchmarkContextSwitch-4   	 5000000	       300 ns/op
+PASS
+ok  	command-line-arguments	1.813s
+
+$ make test NUM=504
+Find the code file in ./ch5-concurrency-at-scale/504-concurrent-with-hearbeat_test.go
+=== RUN   TestDoWork_GeneratesAllNumbers
+--- PASS: TestDoWork_GeneratesAllNumbers (2.00s)
+PASS
+ok  	command-line-arguments	2.009s
 ```
